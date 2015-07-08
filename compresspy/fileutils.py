@@ -1,3 +1,5 @@
+import io
+
 class CompressedFile(io.BufferedIOBase):
     """
     The CompressedFile class simulates a file object
