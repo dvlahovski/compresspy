@@ -1,4 +1,4 @@
-from compresspy.fileutils import CompressedFile
+from fileutils import CompressedFile
 
 
 def open(filename, mode):
@@ -7,8 +7,8 @@ def open(filename, mode):
 
 class LZW():
     def __init__(self):
-        self._magic = b'\012\034'  # TODO specify the magic bytes
-        self.max_dict_size = 1000  # TODO
+        self._magic = b'\xba\xca'  # TODO specify the magic bytes
+        self.max_dict_size = 1000  # TODO limit dictionary ?
 
     def compress(self, data):
         dictionary = dict([(bytes([i]), i) for i in range(256)])
