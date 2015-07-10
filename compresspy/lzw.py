@@ -7,8 +7,8 @@ def open(filename, mode):
 
 class LZW():
     def __init__(self):
-        self._magic = b'\xba\xca'  # TODO specify the magic bytes
-        self.max_dict_size = 1000  # TODO limit dictionary ?
+        self._magic = b'\xba\xca'
+        #TODO limit dict
 
     def compress(self, data):
         dictionary = dict([(bytes([i]), i) for i in range(256)])
