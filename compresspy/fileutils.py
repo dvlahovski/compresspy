@@ -24,17 +24,11 @@ class CompressedFile(io.BufferedIOBase):
             raise TypeError("not a {} file"
                             .format(self.compressor.__class__.__name__))
 
-    """
-    Use self.compressor.decompress()
-    """
     def read(self, size=-1):
         self.read_header()
         data = self.fileobj.read()
         return self.compressor.decompress(data)
 
-    """
-    Use self.compressor.compress()
-    """
     def write(self, data):
         compressed = self.compressor.compress(data)
         if len(compressed) > len(data):
