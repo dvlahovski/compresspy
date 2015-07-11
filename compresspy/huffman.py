@@ -8,6 +8,8 @@ from bitstring import BitStream, ReadError
 def open(filename, mode):
     return CompressedFile(filename, mode, Huffman)
 
+extension = ".hff"
+
 
 class HuffmanNode():
     def __init__(self, left=None, right=None, value=None, weight=None):
@@ -57,7 +59,7 @@ class HuffmanNode():
 
 class Huffman():
     def __init__(self):
-        self._magic = b'\xba\xda'
+        self.magic = b'\xba\xda'
 
     def compress(self, data):
         weight = Counter(data)

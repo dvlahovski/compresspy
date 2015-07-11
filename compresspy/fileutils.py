@@ -7,36 +7,38 @@ class CompressedFile(io.BufferedIOBase):
     The CompressedFile class simulates a file object
     """
     def __init__(self, filename, mode, compressor):
-        self._filename = filename
-        self._mode = mode
-        self._compressor = compressor()
-        self._fileobj = open(filename, mode)  # XXX mode rb or wb
-        # self._chunksize = 1024
+        self.filename = filename
+        self.mode = mode
+        self.compressor = compressor()
+        if mode not in ['rb', 'wb']:
+            raise ValueError('only rb and wb modes supported')
+        self.fileobj = open(filename, mode)
+        self.name = self.fileobj.name
 
     def write_header(self):
-        self._fileobj.write(self._compressor._magic)
-        # if len(bin(self._chunksize)[2:]) > 8*4:
-        #     raise ValueError("chunksize must be at most 4 bytes")
-        #
-        # self.fileobj.write(struct.pack("I", self._chunksize))
+        self.fileobj.write(self.compressor.magic)
 
     def read_header(self):
-        magic = self._fileobj.read(2)
-        if magic != self._compressor._magic:
+        magic = self.fileobj.read(2)
+        if magic != self.compressor.magic:
             raise TypeError("not a {} file"
-                            .format(self._compressor.__class__.__name__))
+                            .format(self.compressor.__class__.__name__))
 
     """
-    Use self._compressor.decompress()
+    Use self.compressor.decompress()
     """
     def read(self, size=-1):
         self.read_header()
-        data = self._fileobj.read()
-        return self._compressor.decompress(data)
+        data = self.fileobj.read()
+        return self.compressor.decompress(data)
 
     """
-    Use self._compressor.compress()
+    Use self.compressor.compress()
     """
     def write(self, data):
+        compressed = self.compressor.compress(data)
+        if len(compressed) > len(data):
+            return -1
         self.write_header()
-        self._fileobj.write(self._compressor.compress(data))
+        self.fileobj.write(compressed)
+        return len(compressed)

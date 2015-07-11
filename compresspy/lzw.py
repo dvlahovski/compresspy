@@ -4,10 +4,12 @@ from fileutils import CompressedFile
 def open(filename, mode):
     return CompressedFile(filename, mode, LZW)
 
+extension = ".lzw"
+
 
 class LZW():
     def __init__(self):
-        self._magic = b'\xba\xca'
+        self.magic = b'\xba\xca'
         #TODO limit dict
 
     def compress(self, data):
